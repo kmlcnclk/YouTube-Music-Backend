@@ -5,6 +5,7 @@ const mainRouter = require('./routers/mainRouter');
 const customErrorHandler = require('./errors/customErrorHandler');
 const connectDatabase = require('./databases/connectDatabase');
 const path = require('path');
+const compression = require('compression');
 
 dotenv.config({});
 
@@ -26,6 +27,7 @@ const options = {
   },
 };
 
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
