@@ -31,9 +31,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(mainRouter);
 app.use('/public', express.static(path.join(__dirname, 'public'), options));
-// app.use('*', (req, res) => {
-//   res.send('Not Found');
-// });
+app.use('*', (req, res) => {
+  res.send('Not Found');
+});
 app.use(customErrorHandler);
 
 app.listen(PORT, () => console.log(`Server running http://localhost:${PORT}/`));
