@@ -12,7 +12,7 @@ const musicQuery = require('../middlewares/query/musicQuery');
 
 const musicRouter = Router();
 
-musicRouter.get('/get20Music', [musicQuery], get20Music);
+musicRouter.get('/get20Music', [musicQuery()], get20Music);
 
 musicRouter.get('/single/:id', getSingleMusic);
 
