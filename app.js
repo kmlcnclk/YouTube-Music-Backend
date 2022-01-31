@@ -29,11 +29,11 @@ const options = {
 };
 const corsOptions = {
   origin: 'http://localhost:5000',
-  optionsSuccessStatus: 200 
-
+  optionsSuccessStatus: 200,
+};
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(mainRouter);
