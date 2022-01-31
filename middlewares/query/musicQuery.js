@@ -17,10 +17,6 @@ const musicQueryMiddleware = expressAsyncHandler(async (req, res, next) => {
       select: 'name',
     });
 
-  if (options && options.population) {
-    query = populateHelper(query, options.population);
-  }
-
   const total = await MusicModel.countDocuments();
   const paginationResult = await paginationHelper(total, 20, query, req);
 
