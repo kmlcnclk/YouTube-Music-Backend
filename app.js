@@ -27,6 +27,9 @@ const options = {
     res.set('x-timestamp', Date.now());
   },
 };
+const corsOptions = {
+  origin: 'http://localhost:5000',
+  optionsSuccessStatus: 200 
 
 app.use(helmet());
 app.use(compression());
