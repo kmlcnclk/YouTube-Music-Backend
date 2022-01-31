@@ -30,6 +30,7 @@ const options = {
 const corsOptions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'DELETE', 'PUT'],
 };
 app.use(helmet());
 app.use(compression());
