@@ -1,6 +1,6 @@
 # YouTube Music Backend
 
-#### [You can click here for the link to the backend.](https://youtube-music-backend.herokuapp.com/)
+#### [You can click here for the link to the Backend.](https://youtube-music-backend.herokuapp.com/)
 
 ### I used these technologies while doing this project
 
