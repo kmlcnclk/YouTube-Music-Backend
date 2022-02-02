@@ -28,8 +28,10 @@ const options = {
   },
 };
 const corsOptions = {
-  // origin: 'http://localhost:3000',
-  origin: 'https://youtube-music-frontend.vercel.app',
+  origin: [
+    'https://youtube-music-frontend.vercel.app',
+    'http://localhost:3000',
+  ],
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
 };
