@@ -144,6 +144,8 @@ const get20Music = expressAsyncHandler(async (req, res, next) => {
   req.query.customLabels = await {
     nextPage: 'next',
     prevPage: 'prev',
+    totalDocs: 'totalMusics',
+    docs: 'musics',
   };
 
   MusicModel.paginate(...new PaginationParameters(req).get())
