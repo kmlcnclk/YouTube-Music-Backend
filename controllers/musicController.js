@@ -1,6 +1,7 @@
 const expressAsyncHandler = require('express-async-handler');
 const MusicModel = require('../databases/models/MusicModel');
 const CustomError = require('../errors/CustomError');
+const { PaginationParameters } = require('mongoose-paginate-v2');
 
 const musicPost = expressAsyncHandler(async (req, res, next) => {
   const { name, artists, duration, publicationYear, album_or_single, kind } =
@@ -128,8 +129,31 @@ const deleteMusic = expressAsyncHandler(async (req, res, next) => {
   });
 });
 
-const get20Music = expressAsyncHandler(async (req, res) => {
-  return res.status(200).json(res.queryResults);
+const get20Music = expressAsyncHandler(async (req, res, next) => {
+  req.query.populate = await [
+    {
+      path: 'artists',
+      select: 'name',
+    },
+    {
+      path: 'album_or_single',
+      select: 'name',
+    },
+  ];
+
+  req.query.customLabels = await {
+    nextPage: 'next',
+    prevPage: 'prev',
+  };
+
+  MusicModel.paginate(...new PaginationParameters(req).get())
+    .then((data) =>
+      res.status(200).json({
+        success: true,
+        data: data,
+      })
+    )
+    .catch((err) => next(new CustomError(err.message, 500)));
 });
 
 module.exports = {

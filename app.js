@@ -43,7 +43,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(mainRouter);
 app.use('/public', express.static(path.join(__dirname, 'public'), options));
 app.use('*', (req, res) => {
-  res.send('Not Found');
+  return res.status(404).send(
+    `<div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;">
+      <h2 style="color:#333;font-family:sans-serif;">
+        <strong>
+          &#128550;
+        </strong>
+      </h2>
+      <h2 style="color:#333;font-family:sans-serif;">
+        <strong>
+          404 Not Found
+        </strong>
+      </h2>
+     </div>`
+  );
 });
 app.use(customErrorHandler);
 

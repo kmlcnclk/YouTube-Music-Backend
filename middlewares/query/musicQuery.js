@@ -1,7 +1,4 @@
-const {
-  populateHelper,
-  paginationHelper,
-} = require('./queryMiddlewareHelpers');
+const { paginationHelper } = require('./queryMiddlewareHelpers');
 const MusicModel = require('../../databases/models/MusicModel');
 const expressAsyncHandler = require('express-async-handler');
 
