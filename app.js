@@ -81,7 +81,7 @@ app.use('*', (req, res) => {
         </strong>
       </h2>
       <div style="background-color:#1aee30;cursor:pointer;padding:5px;border-radius:5px;width:170px;height:40px;display:flex;justify-content:center;align-items:center;" >
-      <a href="http://localhost:5000/api-docs/" style="width:100%;height:100%;color:#f3f3f3;font-family:sans-serif;text-decoration:none;font-weight:600;display:flex;justify-content:center;align-items:center;">
+      <a href="${process.env.URL}/api-docs/" style="width:100%;height:100%;color:#f3f3f3;font-family:sans-serif;text-decoration:none;font-weight:600;display:flex;justify-content:center;align-items:center;">
       Click For Swagger UI
       </a>
       </div>
