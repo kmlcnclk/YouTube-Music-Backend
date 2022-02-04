@@ -11,10 +11,14 @@ const isImageExist = (req, res, next) => {
 };
 
 const isFieldsExist = (req, res, next) => {
-  const { name, description, publicationYear } = req.body;
+  const { name, publicationYear, artists } = req.body;
 
   if (!name) {
     return next(new CustomError('Name field is required', 400));
+  }
+
+  if (!artists) {
+    return next(new CustomError('Single artists field is required', 400));
   }
 
   if (!publicationYear) {

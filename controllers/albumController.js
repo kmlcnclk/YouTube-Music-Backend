@@ -121,7 +121,7 @@ const deleteAlbum = expressAsyncHandler(async (req, res, next) => {
 });
 
 const updateAlbum = expressAsyncHandler(async (req, res, next) => {
-  const { name, description, publicationYear } = req.body;
+  const { name, description, publicationYear, artists } = req.body;
   const { id } = req.params;
 
   const album = await AlbumModel.findById(id);
@@ -147,6 +147,10 @@ const updateAlbum = expressAsyncHandler(async (req, res, next) => {
 
   if (publicationYear) {
     album.publicationYear = await publicationYear;
+  }
+
+  if (artists) {
+    album.artists = await artists;
   }
 
   if (req.savedAlbumImage) {

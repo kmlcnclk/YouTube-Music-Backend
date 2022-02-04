@@ -31,7 +31,10 @@ const getSingleSingle = expressAsyncHandler(async (req, res, next) => {
     return next(new CustomError('ID is not defined', 400));
   }
 
-  const single = await SingleModel.findById(id);
+  const single = await SingleModel.findById(id).populate({
+    path: 'artists',
+    select: 'name',
+  });
 
   if (!single) {
     return next(new CustomError('Single is not defined', 400));
@@ -118,7 +121,7 @@ const deleteSingle = expressAsyncHandler(async (req, res, next) => {
 });
 
 const updateSingle = expressAsyncHandler(async (req, res, next) => {
-  const { name, description, publicationYear } = req.body;
+  const { name, description, publicationYear, artists } = req.body;
   const { id } = req.params;
 
   const single = await SingleModel.findById(id);
@@ -144,6 +147,10 @@ const updateSingle = expressAsyncHandler(async (req, res, next) => {
 
   if (publicationYear) {
     single.publicationYear = await publicationYear;
+  }
+
+  if (artists) {
+    single.artists = await artists;
   }
 
   if (req.savedSingleImage) {

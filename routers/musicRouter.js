@@ -16,7 +16,7 @@ musicRouter.get('/get20Music', get20Music);
 musicRouter.get('/single/:id', getSingleMusic);
 
 musicRouter.post(
-  '/',
+  '/create',
   [
     musicMulter.fields([
       { name: 'image', maxCount: 1 },
@@ -38,6 +38,7 @@ musicRouter.put(
   ],
   updateMusic
 );
+
 musicRouter.delete('/delete/:id', deleteMusic);
 
 module.exports = musicRouter;

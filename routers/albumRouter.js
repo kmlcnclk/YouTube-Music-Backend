@@ -13,7 +13,7 @@ const albumRouter = Router();
 albumRouter.get('/single/:id', getSingleAlbum);
 
 albumRouter.post(
-  '/',
+  '/create',
   [albumImage.single('image'), isImageExist, isFieldsExist],
   albumPost
 );

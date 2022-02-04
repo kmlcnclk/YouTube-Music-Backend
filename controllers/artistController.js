@@ -162,7 +162,7 @@ const deleteArtist = expressAsyncHandler(async (req, res, next) => {
 });
 
 const updateArtist = expressAsyncHandler(async (req, res, next) => {
-  const { name, description } = req.body;
+  const { name, description, subscriberCount } = req.body;
   const { id } = req.params;
 
   const artist = await ArtistModel.findById(id);
@@ -184,6 +184,10 @@ const updateArtist = expressAsyncHandler(async (req, res, next) => {
 
   if (description) {
     artist.description = await description;
+  }
+
+  if (subscriberCount) {
+    artist.subscriberCount = await subscriberCount;
   }
 
   if (req.savedArtistImage) {

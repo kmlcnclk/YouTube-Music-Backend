@@ -13,7 +13,7 @@ const singleRouter = Router();
 singleRouter.get('/single/:id', getSingleSingle);
 
 singleRouter.post(
-  '/',
+  '/create',
   [singleImage.single('image'), isImageExist, isFieldsExist],
   singlePost
 );

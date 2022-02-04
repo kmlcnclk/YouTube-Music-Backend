@@ -13,7 +13,7 @@ const artistRouter = Router();
 artistRouter.get('/single/:id', getSingleArtist);
 
 artistRouter.post(
-  '/',
+  '/create',
   [artistImage.single('image'), isImageExist, isFieldsExist],
   artistPost
 );

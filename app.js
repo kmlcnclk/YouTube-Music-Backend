@@ -7,6 +7,8 @@ const connectDatabase = require('./databases/connectDatabase');
 const path = require('path');
 const compression = require('compression');
 const helmet = require('helmet');
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 dotenv.config({});
 
@@ -35,11 +37,34 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
 };
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'YouTube Music API',
+      version: '0.1.0',
+      description:
+        'YouTube Music API is a RESTful API that allows you to search for songs, playlists, and videos on YouTube.',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000',
+      },
+    ],
+  },
+  apis: ['./swaggers/*.js'],
+};
+
+const specs = swaggerJsDoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 app.use(helmet());
 app.use(compression());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use(mainRouter);
 app.use('/public', express.static(path.join(__dirname, 'public'), options));
 app.use('*', (req, res) => {
@@ -55,9 +80,15 @@ app.use('*', (req, res) => {
           404 Not Found
         </strong>
       </h2>
-     </div>`
+      <div style="background-color:#1aee30;cursor:pointer;padding:5px;border-radius:5px;width:170px;height:40px;display:flex;justify-content:center;align-items:center;" >
+      <a href="http://localhost:5000/api-docs/" style="width:100%;height:100%;color:#f3f3f3;font-family:sans-serif;text-decoration:none;font-weight:600;display:flex;justify-content:center;align-items:center;">
+      Click For Swagger UI
+      </a>
+      </div>
+      </div>`
   );
 });
+
 app.use(customErrorHandler);
 
 app.listen(PORT, () => console.log(`Server running http://localhost:${PORT}/`));
