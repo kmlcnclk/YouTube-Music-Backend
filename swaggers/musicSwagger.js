@@ -14,6 +14,8 @@
 *          - publicationYear
 *          - kind
 *          - album_or_single
+*          - lyrics
+*          - lyricSource
 *        properties:
 *          name:
 *            type: string
@@ -47,6 +49,14 @@
 *            type: string
 *            description: Kind of music
 *            example: "Album"
+*          lyrics:
+*            type: string
+*            description: Name of lyrics
+*            example: "Example Lyrics"
+*          lyricSource:
+*            type: string
+*            description: Name of lyric source
+*            example: "Example Lyric Source"
 *          publicationYear:
 *            type: integer
 *            description: Publication year of music
@@ -60,6 +70,8 @@
 *            music: "https://www.youtube.com/watch?v=tntOCGkgt98"
 *            album_or_single: "61f011d8989a34693d9cce94"
 *            kind: "Album"
+*            lyrics: "Example Lyrics"
+*            lyricSource: "Example Lyric Source"
 *            publicationYear: 2020
 */
 

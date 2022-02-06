@@ -4,8 +4,16 @@ const CustomError = require('../errors/CustomError');
 const { PaginationParameters } = require('mongoose-paginate-v2');
 
 const musicPost = expressAsyncHandler(async (req, res, next) => {
-  const { name, artists, duration, publicationYear, album_or_single, kind } =
-    req.body;
+  const {
+    name,
+    artists,
+    duration,
+    publicationYear,
+    album_or_single,
+    kind,
+    lyrics,
+    lyricSource,
+  } = req.body;
 
   const { URL } = process.env;
 
@@ -21,6 +29,8 @@ const musicPost = expressAsyncHandler(async (req, res, next) => {
     publicationYear,
     album_or_single,
     kind,
+    lyrics,
+    lyricSource,
   });
 
   return res.status(201).json({

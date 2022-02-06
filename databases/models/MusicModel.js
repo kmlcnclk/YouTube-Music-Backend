@@ -23,6 +23,14 @@ const MusicSchema = new Schema({
     type: String,
     required: [true, 'Please enter a image url'],
   },
+  lyrics: {
+    type: String,
+    required: [true, 'Please enter a lyrics'],
+  },
+  lyricSource: {
+    type: String,
+    required: [true, 'Please enter a lyric source'],
+  },
   song_url: {
     type: String,
     required: [true, 'Please enter a song url'],
