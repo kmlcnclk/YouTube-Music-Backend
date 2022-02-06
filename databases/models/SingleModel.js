@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const slugify = require('slugify');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const SingleSchema = new Schema({
   name: {
@@ -37,6 +38,8 @@ const SingleSchema = new Schema({
     type: String,
   },
 });
+
+SingleSchema.plugin(mongoosePaginate);
 
 // Name Slug .For example kamilcan-celik
 SingleSchema.pre('save', function (next) {
