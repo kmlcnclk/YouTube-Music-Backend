@@ -14,8 +14,6 @@
 *          - publicationYear
 *          - kind
 *          - album_or_single
-*          - lyrics
-*          - lyricSource
 *        properties:
 *          name:
 *            type: string
