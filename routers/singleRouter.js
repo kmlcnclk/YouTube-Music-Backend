@@ -5,7 +5,10 @@ const {
   deleteSingle,
   updateSingle,
 } = require('../controllers/singleController');
-const { singleImage } = require('../middlewares/libraries/singleImage');
+const {
+  singleImage,
+  uploadImage,
+} = require('../middlewares/libraries/singleImage');
 const { isImageExist, isFieldsExist } = require('../middlewares/tools/singles');
 
 const singleRouter = Router();
@@ -14,11 +17,15 @@ singleRouter.get('/single/:id', getSingleSingle);
 
 singleRouter.post(
   '/create',
-  [singleImage.single('image'), isImageExist, isFieldsExist],
+  [singleImage.single('image'), uploadImage, isImageExist, isFieldsExist],
   singlePost
 );
 
-singleRouter.put('/update/:id', [singleImage.single('image')], updateSingle);
+singleRouter.put(
+  '/update/:id',
+  [singleImage.single('image'), uploadImage],
+  updateSingle
+);
 
 singleRouter.delete('/delete/:id', deleteSingle);
 

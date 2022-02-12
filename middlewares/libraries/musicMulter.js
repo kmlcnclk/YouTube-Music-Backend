@@ -1,33 +1,8 @@
 const multer = require('multer');
-const path = require('path');
 const CustomError = require('../../errors/CustomError');
-const { nanoid } = require('nanoid');
+const cloudinary = require('cloudinary');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (file.fieldname == 'image') {
-      const rootDir = path.dirname(require.main.filename);
-      cb(null, path.join(rootDir, '/public/musics/images'));
-    } else if (file.fieldname == 'music') {
-      const rootDir = path.dirname(require.main.filename);
-      cb(null, path.join(rootDir, '/public/musics/songs'));
-    }
-  },
-  filename: function (req, file, cb) {
-    if (file.fieldname == 'image') {
-      const extension = file.mimetype.split('/')[1];
-      let randomId = nanoid(30);
-      req.savedMusicImage =
-        'image_' + file.originalname + '_' + randomId + '.' + extension;
-      cb(null, req.savedMusicImage);
-    } else if (file.fieldname == 'music') {
-      const originalName = file.originalname.split('.')[0];
-      let randomId = nanoid(30);
-      req.savedMusicSong = 'music_' + originalName + '_' + randomId + '.mp3';
-      cb(null, req.savedMusicSong);
-    }
-  },
-});
+const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
   if (file.fieldname == 'image') {
@@ -59,6 +34,36 @@ const fileFilter = (req, file, cb) => {
     return cb(null, true);
   }
 };
+
 const musicMulter = multer({ storage, fileFilter });
 
-module.exports = { musicMulter };
+const uploadImage = async (req, res, next) => {
+  if (req.files.music[0].path) {
+    try {
+      await cloudinary.v2.uploader.upload(
+        req.files.music[0].path,
+        { resource_type: 'video' },
+        async function (error, result) {
+          req.savedMusicSong = await result;
+        }
+      );
+    } catch (err) {
+      return next(new CustomError(err.message, err.http_code));
+    }
+  }
+
+  if (req.files.image[0].path) {
+    try {
+      const resultImage = await cloudinary.uploader.upload(
+        req.files.image[0].path
+      );
+      req.savedMusicImage = await resultImage;
+    } catch (err) {
+      return next(new CustomError(err.message, err.http_code));
+    }
+  }
+
+  next();
+};
+
+module.exports = { musicMulter, uploadImage };

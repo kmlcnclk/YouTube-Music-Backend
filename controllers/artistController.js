@@ -4,17 +4,15 @@ const MusicModel = require('../databases/models/MusicModel');
 const AlbumModel = require('../databases/models/AlbumModel');
 const SingleModel = require('../databases/models/SingleModel');
 const CustomError = require('../errors/CustomError');
+const cloudinary = require('cloudinary');
 
 const artistPost = expressAsyncHandler(async (req, res, next) => {
   const { name, description, subscriberCount } = req.body;
 
-  const { URL } = process.env;
-
-  const image_url = `${URL}/public/artists/${req.savedArtistImage}`;
-
   const artist = await ArtistModel.create({
     name,
-    image_url,
+    image_url: req.savedArtistImage.secure_url,
+    cloudinary_id: req.savedArtistImage.public_id,
     description,
     subscriberCount: subscriberCount ? subscriberCount : 0,
   });
@@ -153,6 +151,8 @@ const deleteArtist = expressAsyncHandler(async (req, res, next) => {
     }
   }
 
+  await cloudinary.uploader.destroy(artist.cloudinary_id);
+
   await ArtistModel.findByIdAndRemove(id);
 
   return res.status(200).json({
@@ -171,13 +171,6 @@ const updateArtist = expressAsyncHandler(async (req, res, next) => {
     return next(new CustomError('Artist is not defined', 400));
   }
 
-  const { URL } = process.env;
-
-  let image_url;
-  if (req.savedArtistImage) {
-    image_url = `${URL}/public/artists/${req.savedArtistImage}`;
-  }
-
   if (name) {
     artist.name = await name;
   }
@@ -191,7 +184,10 @@ const updateArtist = expressAsyncHandler(async (req, res, next) => {
   }
 
   if (req.savedArtistImage) {
-    artist.image_url = await image_url;
+    await cloudinary.uploader.destroy(artist.cloudinary_id);
+
+    artist.image_url = await req.savedArtistImage.secure_url;
+    artist.cloudinary_id = await req.savedArtistImage.public_id;
   }
 
   await artist.save();

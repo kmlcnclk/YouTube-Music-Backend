@@ -6,7 +6,10 @@ const {
   deleteMusic,
   get20Music,
 } = require('../controllers/musicController');
-const { musicMulter } = require('../middlewares/libraries/musicMulter');
+const {
+  musicMulter,
+  uploadImage,
+} = require('../middlewares/libraries/musicMulter');
 const { isMulterExist, isFieldsExist } = require('../middlewares/tools/musics');
 
 const musicRouter = Router();
@@ -22,6 +25,7 @@ musicRouter.post(
       { name: 'image', maxCount: 1 },
       { name: 'music', maxCount: 1 },
     ]),
+    uploadImage,
     isMulterExist,
     isFieldsExist,
   ],
@@ -35,6 +39,7 @@ musicRouter.put(
       { name: 'image', maxCount: 1 },
       { name: 'music', maxCount: 1 },
     ]),
+    uploadImage,
   ],
   updateMusic
 );

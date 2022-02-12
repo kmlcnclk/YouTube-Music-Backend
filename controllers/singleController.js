@@ -2,18 +2,16 @@ const expressAsyncHandler = require('express-async-handler');
 const MusicModel = require('../databases/models/MusicModel');
 const SingleModel = require('../databases/models/SingleModel');
 const CustomError = require('../errors/CustomError');
+const cloudinary = require('cloudinary');
 
 const singlePost = expressAsyncHandler(async (req, res, next) => {
   const { name, artists, description, publicationYear } = req.body;
 
-  const { URL } = process.env;
-
-  const image_url = `${URL}/public/singles/${req.savedSingleImage}`;
-
   const single = await SingleModel.create({
     name,
     artists,
-    image_url,
+    image_url: req.savedSingleImage.secure_url,
+    cloudinary_id: req.savedSingleImage.public_id,
     description: description ? description : '',
     publicationYear,
   });
@@ -112,6 +110,8 @@ const deleteSingle = expressAsyncHandler(async (req, res, next) => {
     }
   }
 
+  await cloudinary.uploader.destroy(single.cloudinary_id);
+
   await SingleModel.findByIdAndRemove(id);
 
   return res.status(200).json({
@@ -128,13 +128,6 @@ const updateSingle = expressAsyncHandler(async (req, res, next) => {
 
   if (!single) {
     return next(new CustomError('Single is not defined', 400));
-  }
-
-  const { URL } = process.env;
-
-  let image_url;
-  if (req.savedSingleImage) {
-    image_url = `${URL}/public/singles/${req.savedSingleImage}`;
   }
 
   if (name) {
@@ -154,7 +147,10 @@ const updateSingle = expressAsyncHandler(async (req, res, next) => {
   }
 
   if (req.savedSingleImage) {
-    single.image_url = await image_url;
+    await cloudinary.uploader.destroy(single.cloudinary_id);
+
+    single.image_url = await req.savedSingleImage.secure_url;
+    single.cloudinary_id = await req.savedSingleImage.public_id;
   }
 
   await single.save();

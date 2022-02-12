@@ -9,12 +9,19 @@ const compression = require('compression');
 const helmet = require('helmet');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const cloudinary = require('cloudinary');
 
 dotenv.config({});
 
 connectDatabase();
 
 const PORT = process.env.PORT || 5000;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 

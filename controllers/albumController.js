@@ -2,18 +2,16 @@ const expressAsyncHandler = require('express-async-handler');
 const AlbumModel = require('../databases/models/AlbumModel');
 const MusicModel = require('../databases/models/MusicModel');
 const CustomError = require('../errors/CustomError');
+const cloudinary = require('cloudinary');
 
 const albumPost = expressAsyncHandler(async (req, res, next) => {
   const { name, artists, description, publicationYear } = req.body;
 
-  const { URL } = process.env;
-
-  const image_url = `${URL}/public/albums/${req.savedAlbumImage}`;
-
   const album = await AlbumModel.create({
     name,
     artists,
-    image_url,
+    image_url: req.savedAlbumImage.secure_url,
+    cloudinary_id: req.savedAlbumImage.public_id,
     description,
     publicationYear,
   });
@@ -112,6 +110,8 @@ const deleteAlbum = expressAsyncHandler(async (req, res, next) => {
     }
   }
 
+  await cloudinary.uploader.destroy(album.cloudinary_id);
+
   await AlbumModel.findByIdAndRemove(id);
 
   return res.status(200).json({
@@ -128,13 +128,6 @@ const updateAlbum = expressAsyncHandler(async (req, res, next) => {
 
   if (!album) {
     return next(new CustomError('Album is not defined', 400));
-  }
-
-  const { URL } = process.env;
-
-  let image_url;
-  if (req.savedAlbumImage) {
-    image_url = `${URL}/public/albums/${req.savedAlbumImage}`;
   }
 
   if (name) {
@@ -154,7 +147,10 @@ const updateAlbum = expressAsyncHandler(async (req, res, next) => {
   }
 
   if (req.savedAlbumImage) {
-    album.image_url = await image_url;
+    await cloudinary.uploader.destroy(album.cloudinary_id);
+
+    album.image_url = await req.savedAlbumImage.secure_url;
+    album.cloudinary_id = await req.savedAlbumImage.public_id;
   }
 
   await album.save();

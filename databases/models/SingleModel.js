@@ -22,6 +22,10 @@ const SingleSchema = new Schema({
     type: String,
     required: [true, 'Please enter a image url'],
   },
+  cloudinary_id: {
+    type: String,
+    required: [true, 'Please enter a cloudinary id'],
+  },
   description: {
     type: String,
     required: [true, 'Please enter a description'],

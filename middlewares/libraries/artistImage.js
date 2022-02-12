@@ -1,21 +1,8 @@
 const multer = require('multer');
-const path = require('path');
 const CustomError = require('../../errors/CustomError');
-const { nanoid } = require('nanoid');
+const cloudinary = require('cloudinary');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const rootDir = path.dirname(require.main.filename);
-    cb(null, path.join(rootDir, '/public/artists'));
-  },
-  filename: function (req, file, cb) {
-    const extension = file.mimetype.split('/')[1];
-    let randomId = nanoid(30);
-    req.savedArtistImage =
-      'image_' + file.originalname + '_' + randomId + '.' + extension;
-    cb(null, req.savedArtistImage);
-  },
-});
+const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
   let allowedMimeTypes = ['image/jpg', 'image/png', 'image/gif', 'image/jpeg'];
@@ -26,6 +13,19 @@ const fileFilter = (req, file, cb) => {
 
   return cb(null, true);
 };
+
 const artistImage = multer({ storage, fileFilter });
 
-module.exports = { artistImage };
+const uploadImage = async (req, res, next) => {
+  if (req.file.path) {
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      req.savedArtistImage = await result;
+      next();
+    } catch (err) {
+      return next(new CustomError(err.message, 500));
+    }
+  }
+};
+
+module.exports = { artistImage, uploadImage };

@@ -23,6 +23,10 @@ const MusicSchema = new Schema({
     type: String,
     required: [true, 'Please enter a image url'],
   },
+  cloudinary_image_id: {
+    type: String,
+    required: [true, 'Please enter a cloudinary image id'],
+  },
   lyrics: {
     type: String,
     required: [true, 'Please enter a lyrics'],
@@ -34,6 +38,10 @@ const MusicSchema = new Schema({
   song_url: {
     type: String,
     required: [true, 'Please enter a song url'],
+  },
+  cloudinary_song_id: {
+    type: String,
+    required: [true, 'Please enter a cloudinary song id'],
   },
   album_or_single: {
     type: mongoose.Schema.ObjectId,

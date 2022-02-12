@@ -2,6 +2,7 @@ const expressAsyncHandler = require('express-async-handler');
 const MusicModel = require('../databases/models/MusicModel');
 const CustomError = require('../errors/CustomError');
 const { PaginationParameters } = require('mongoose-paginate-v2');
+const cloudinary = require('cloudinary');
 
 const musicPost = expressAsyncHandler(async (req, res, next) => {
   const {
@@ -15,16 +16,13 @@ const musicPost = expressAsyncHandler(async (req, res, next) => {
     lyricSource,
   } = req.body;
 
-  const { URL } = process.env;
-
-  const image_url = `${URL}/public/musics/images/${req.savedMusicImage}`;
-  const song_url = `${URL}/public/musics/songs/${req.savedMusicSong}`;
-
   const music = await MusicModel.create({
     name,
     artists,
-    image_url,
-    song_url,
+    image_url: req.savedMusicImage.secure_url,
+    cloudinary_image_id: req.savedMusicImage.public_id,
+    song_url: req.savedMusicSong.secure_url,
+    cloudinary_song_id: req.savedMusicSong.public_id,
     duration,
     publicationYear,
     album_or_single,
@@ -70,18 +68,6 @@ const updateMusic = expressAsyncHandler(async (req, res, next) => {
 
   const music = await MusicModel.findById(id);
 
-  const { URL } = process.env;
-
-  let image_url;
-  if (req.savedMusicImage) {
-    image_url = `${URL}/public/musics/images/${req.savedMusicImage}`;
-  }
-
-  let song_url;
-  if (req.savedMusicSong) {
-    song_url = `${URL}/public/musics/songs/${req.savedMusicSong}`;
-  }
-
   if (name) {
     music.name = await name;
   }
@@ -107,11 +93,19 @@ const updateMusic = expressAsyncHandler(async (req, res, next) => {
   }
 
   if (req.savedMusicImage) {
-    music.image_url = await image_url;
+    await cloudinary.uploader.destroy(music.cloudinary_image_id);
+
+    music.image_url = await req.savedMusicImage.secure_url;
+    music.cloudinary_image_id = await req.savedMusicImage.public_id;
   }
 
   if (req.savedMusicSong) {
-    music.song_url = await song_url;
+    await cloudinary.v2.uploader.destroy(music.cloudinary_song_id, {
+      resource_type: 'video',
+    });
+
+    music.song_url = await req.savedMusicSong.secure_url;
+    music.cloudinary_song_id = await req.savedMusicSong.public_id;
   }
 
   await music.save();
@@ -130,6 +124,11 @@ const deleteMusic = expressAsyncHandler(async (req, res, next) => {
   if (!music) {
     return next(new CustomError('Music is not defined', 400));
   }
+
+  await cloudinary.uploader.destroy(music.cloudinary_image_id);
+  await cloudinary.v2.uploader.destroy(music.cloudinary_song_id, {
+    resource_type: 'video',
+  });
 
   await MusicModel.findByIdAndRemove(id);
 
