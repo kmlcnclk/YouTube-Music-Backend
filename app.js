@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const cloudinary = require('cloudinary');
+const log = require('./tools/index');
 
 dotenv.config({});
 
@@ -98,4 +99,4 @@ app.use('*', (req, res) => {
 
 app.use(customErrorHandler);
 
-app.listen(PORT, () => console.log(`Server running http://localhost:${PORT}/`));
+app.listen(PORT, () => log.info(`Server running ${process.env.URL}`));

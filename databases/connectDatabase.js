@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const log = require('../tools/index');
 
 // Connect Database
 const connectDatabase = () => {
@@ -8,7 +9,7 @@ const connectDatabase = () => {
       useUnifiedTopology: true,
     })
     .then(() => {
-      console.log('MongoDB Connection Successful');
+      log.info('MongoDB Connection Successful');
     })
     .catch((err) => {
       console.error(err);
