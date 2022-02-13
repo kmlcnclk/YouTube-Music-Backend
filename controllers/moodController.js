@@ -6,7 +6,6 @@ const getSingleMood = expressAsyncHandler(async (req, res, next) => {});
 
 const getAllMoods = expressAsyncHandler(async (req, res, next) => {
   const options = {
-    sort: { createdAt: -1 },
     customLabels: {
       nextPage: 'next',
       prevPage: 'prev',

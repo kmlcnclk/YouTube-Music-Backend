@@ -6,7 +6,7 @@ const getSingleGenre = expressAsyncHandler(async (req, res, next) => {});
 
 const getAllGenres = expressAsyncHandler(async (req, res, next) => {
   const options = {
-    sort: { createdAt: -1 },
+    limit: 20,
     customLabels: {
       nextPage: 'next',
       prevPage: 'prev',
